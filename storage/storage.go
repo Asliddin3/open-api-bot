@@ -15,12 +15,10 @@ const (
 )
 
 type User struct {
-	TgID        int64
-	TgName      string
-	Fullname    *string
-	PhoneNumber *string
-	Step        string
-	CreatedAt   *time.Time
+	TgID      int64
+	TgName    string
+	Step      string
+	CreatedAt *time.Time
 }
 
 type StorageI interface {
@@ -49,8 +47,8 @@ func (s *storagePg) Create(user *User) (*User, error) {
 			step
 		) VALUES($1, $2, $3)
 		RETURNING
-			fullname,
-			phone_number,
+			tg_name,
+			step,
 			created_at
 	`
 
@@ -60,8 +58,8 @@ func (s *storagePg) Create(user *User) (*User, error) {
 		user.TgName,
 		user.Step,
 	).Scan(
-		&user.Fullname,
-		&user.PhoneNumber,
+		&user.TgName,
+		&user.Step,
 		&user.CreatedAt,
 	)
 	if err != nil {
@@ -77,8 +75,6 @@ func (s *storagePg) Get(id int64) (*User, error) {
 	query := `
 		SELECT
 			tg_id,
-			fullname,
-			phone_number,
 			step,
 			created_at
 		FROM users
@@ -88,8 +84,6 @@ func (s *storagePg) Get(id int64) (*User, error) {
 	row := s.db.QueryRow(query, id)
 	err := row.Scan(
 		&result.TgID,
-		&result.Fullname,
-		&result.PhoneNumber,
 		&result.Step,
 		&result.CreatedAt,
 	)

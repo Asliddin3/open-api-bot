@@ -3,6 +3,7 @@ package bot
 import (
 	"log"
 
+	"github.com/Asliddin3/open-api-bot/api"
 	"github.com/Asliddin3/open-api-bot/config"
 	"github.com/Asliddin3/open-api-bot/storage"
 
@@ -13,6 +14,7 @@ type BotHandler struct {
 	cfg     config.Config
 	storage storage.StorageI
 	bot     *tgbotapi.BotAPI
+	api     api.ApiI
 }
 
 func New(cfg config.Config, strg storage.StorageI) BotHandler {
@@ -27,6 +29,7 @@ func New(cfg config.Config, strg storage.StorageI) BotHandler {
 		cfg:     cfg,
 		storage: strg,
 		bot:     bot,
+		api:     api.RegisterApi(),
 	}
 }
 
@@ -50,6 +53,7 @@ func (h *BotHandler) HandleBot(update tgbotapi.Update) {
 		h.SendMessage(user, "error happened")
 	}
 	if update.Message.Command() == "start" {
+		
 	}
 
 	if err != nil {
